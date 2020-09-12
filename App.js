@@ -14,6 +14,8 @@ import {
   View,
   Text,
   StatusBar,
+  FlatList,
+  Dimensions
 } from 'react-native';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
@@ -27,32 +29,49 @@ const App = () => {
     const parsedRes = await res.json();
     setData(parsedRes);
   };
+
   const [data, setData] = useState();
 
   useEffect(() => {
     fetchData();
   }, []);
 
-  console.log(data);
+   //Function used by flatlist that indicates how the item is going to be seen
+  const renderItem =  ( {item} ) => (
+    <Fact key={item._id} fact={item} />
+  )
+  
   return (
     <>
       <StatusBar barStyle="dark-content" />
       <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Text>Cat facts</Text>
-          {data && data.all.map((item) => <Fact key={item._id} fact={item} />)}
-        </ScrollView>
+          <Text style={styles.maintext} >Cat facts</Text>
+          { data &&     
+                  <FlatList 
+                      data={data.all} //Taking the data saved from the API
+                      renderItem={renderItem}
+                      keyExtractor={(item) => item._id}
+                  />   
+          }
       </SafeAreaView>
     </>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    justifyContent: "flex-start",
+  },
+
+  maintext: {
+    fontSize: 20,
+    textAlign: 'center' ,
+  },
+
   scrollView: {
     backgroundColor: Colors.lighter,
   },
+
   engine: {
     position: 'absolute',
     right: 0,
