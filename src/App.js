@@ -1,3 +1,4 @@
+/* eslint-disable react/no-multi-comp */
 /**
  * Sample React Native App
  * https://github.com/facebook/react-native
@@ -7,16 +8,14 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, StyleSheet, ScrollView, Text, StatusBar } from 'react-native';
-
-import { Colors } from 'react-native/Libraries/NewAppScreen';
+import { SafeAreaView, StyleSheet, Text, StatusBar, FlatList } from 'react-native';
 import { API_URL } from '../config';
-
 import Fact from './components/Fact';
 
 const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
+  maintext: {
+    fontSize: 20,
+    textAlign: 'center',
   },
 });
 
@@ -33,15 +32,22 @@ const App = () => {
     fetchData();
   }, []);
 
-  console.log(data);
+  // Function used by flatlist that indicates how the item is going to be seen
+  // eslint-disable-next-line react/prop-types
+  const renderItem = ({ item }) => <Fact key={item._id} fact={item} />;
+
   return (
     <>
       <StatusBar barStyle="dark-content" />
       <SafeAreaView>
-        <ScrollView contentInsetAdjustmentBehavior="automatic" style={styles.scrollView}>
-          <Text>Cat facts</Text>
-          {data && data.all.map((item) => <Fact key={item._id} fact={item} />)}
-        </ScrollView>
+        <Text style={styles.maintext}>Cat facts</Text>
+        {data && (
+          <FlatList
+            data={data.all} // Taking the data saved from the API
+            renderItem={renderItem}
+            keyExtractor={(item) => item._id}
+          />
+        )}
       </SafeAreaView>
     </>
   );
