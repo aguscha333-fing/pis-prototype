@@ -31,7 +31,7 @@ const App = () => {
   }, []);
 
    //Function used by flatlist that indicates how the item is going to be seen
-  const renderItem =  ( {item} ) => (
+  const renderItem = ({item}) => (
     <Fact key={item._id} fact={item} />
   )
   
